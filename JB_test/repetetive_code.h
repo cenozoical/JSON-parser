@@ -7,7 +7,7 @@ while (c == ' ' || c == '\t')\
 }\
 num_op temp_op = ADD;\
 if ((c == '*') || (c == '/'))temp_op = MUL;\
-if (c == ']' || c == ',' || c == EOF || c == '+' || c == '-' || c == '*' || c == '/')\
+if (c == ']' || c == ',' || c == EOF || c == '+' || c == '-' || c == '*' || c == '/'|| c==')')\
 while (stack.back()->size() > 1 && op_vect.size() > 0)\
 {\
 	if (op_vect.back() < temp_op)break;\

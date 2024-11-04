@@ -25,6 +25,12 @@ enum num_op
 	DIV = 3
 
 };
+enum enclosure_type
+{
+	BRACES,
+	BRACKETS
+
+};
 
 extern Node* root_node;
 vector <Node*> list;
@@ -36,7 +42,7 @@ static string* read_name(custom_istr_stream &ss)
 	if (c == '+' || c == '-') *sp += ss.get();
 	c = ss.peek();
 	while (c != EOF && c != '.' && c != '[' && c != ']' && c!=',' && c!=' ' && c!= '\t' && c!= '+' && c != '-'
-		&& c != '*' && c != '/')
+		&& c != '*' && c != '/' && c != '(' && c != ')')
 	{
 		ss.get();
 		if (c != '\\') *sp += c;
@@ -51,7 +57,9 @@ static string* read_name(custom_istr_stream &ss)
 			else if (c == 't') *sp += '\t';
 			else if (c == '.') *sp += '.';
 			else if (c == '[') *sp += '[';
-			else if (c == '[') *sp += ']';
+			else if (c == ']') *sp += ']';
+			else if (c == '(') *sp += '(';
+			else if (c == ')') *sp += ')';
 			else if (c == '\\')*sp += '\\';
 			else if (c == '/')*sp += '/';
 			else if (c == '*')*sp += '*';
@@ -154,6 +162,7 @@ static void parse_command_arguments(custom_istr_stream& ss)
 	vector <Node*>* temp_vect;
 	vector <num_op> op_vect;
 	vector<int> op_pos_vect;//for precise algebric error reporting
+	vector<enclosure_type>enc_vector;
 	Node* temp_node;
 
 
@@ -173,6 +182,19 @@ static void parse_command_arguments(custom_istr_stream& ss)
 		}
 		if (parser_state == 0)
 		{
+			if (skip == '(')
+			{
+				ss.get();
+				enc_vector.push_back(BRACES);
+
+				if (stack.back()->back() != root_node)throw bad_format("Unexpected character");
+				stack.back()->pop_back();
+				temp_vect = new vector<Node*>();
+				temp_vect->push_back(root_node);
+				stack.push_back(temp_vect);
+				continue;
+
+			}
 			string* s = read_name(ss);
 			if (s->length() == 0 && (stack.back()->back() != root_node))
 			{
@@ -247,6 +269,7 @@ static void parse_command_arguments(custom_istr_stream& ss)
 			int c = ss.get();
 			if (c == '[')
 			{
+				enc_vector.push_back(BRACKETS);
 				if (stack.back()->back()->get_type() != ARRAY) throw semantic_error("only arrays can be indexed.");
 				stack.push_back(new vector<Node*>());
 				stack.back()->push_back(root_node);
@@ -257,6 +280,8 @@ static void parse_command_arguments(custom_istr_stream& ss)
 			{
 				int index;
 				if(stack.size() < 2) throw bad_format("']' must follow '[', as well as an index argument, in a command argument.");
+				if(enc_vector.back()!= BRACKETS) throw bad_format("']' cannot enclose ')'.");
+				enc_vector.pop_back();
 				Node* num_node = stack.back()->back();//it should be alone in the  top vector
 				stack.pop_back();
 				Node* arr_node = stack.back()->back();
@@ -339,9 +364,29 @@ static void parse_command_arguments(custom_istr_stream& ss)
 				parser_state = 0;
 				continue;
 			}
+			else if (c == ')')
+			{
+				
+				if (stack.size() < 2) throw bad_format("')' must follow '('  in a command string.");
+				if (enc_vector.back() != BRACES) throw bad_format("')' cannot enclose ']'.");
+				enc_vector.pop_back();
+				Node* num_node = stack.back()->back();//it should be alone in the  top vector
+				stack.pop_back();
+
+				if (num_node->get_type() != NUMBER)throw semantic_error("expression inside baces must be of type 'number'.");
+
+				stack.back()->push_back(num_node);
+				
+				calculate
+
+					parser_state = 2;
+				continue;
+
+
+			}
 			else
 			{
-				throw bad_format("unrecognized character");
+				throw bad_format("Unexpected character");
 			}
 
 		}
@@ -352,6 +397,8 @@ static void parse_command_arguments(custom_istr_stream& ss)
 			{
 				int index;
 				if (stack.size() < 2) throw bad_format("']' must follow '[', as well as an index argument, in a command argument.");
+				if (enc_vector.back() != BRACKETS) throw bad_format("']' cannot enclose ')'.");
+				enc_vector.pop_back();
 				Node* num_node = stack.back()->back();
 				stack.pop_back();
 				Node* arr_node = stack.back()->back();
@@ -430,9 +477,27 @@ static void parse_command_arguments(custom_istr_stream& ss)
 				parser_state = 0;
 				continue;
 			}
+			else if (c == ')')
+			{
+
+				if (stack.size() < 2) throw bad_format("')' must follow '('  in a command string.");
+				Node* num_node = stack.back()->back();//it should be alone in the  top vector
+				stack.pop_back();
+
+				if (num_node->get_type() != NUMBER)throw semantic_error("expression inside baces must be of type 'number'.");
+
+				stack.back()->push_back(num_node);
+
+				calculate
+
+					parser_state = 1;
+				continue;
+
+
+			}
 			else
 			{
-				throw bad_format("unrecognized character");
+				throw bad_format("Unexpected character");
 			}
 
 		}
