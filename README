@@ -1,0 +1,13 @@
+This project was made using Visual Studio Code 2022 on the Windows 10 operating system.
+
+Instructions for building and running the solution.
+1. Open "Command Prompt" application
+2. Change the current directory to that of the extracted archive
+3. Run 'msbuild' command (PATH variable with the value of 'MsBuild.exe' parent directory needs to be added)
+4. On my own computer, step number no. 3 creates the directory "x64/Debug" where the resulting executable is located.
+For testing purposes I have written a batch script "cmd_script.bat" that runs the resulting executable file with various parameters.
+In order for it to work, the value of the "progam_file_directory" environment vaiable (inside "cmd_script.bat") has to be set to the relative path 
+of a directory where the executable file is located (in my case "x64/Debug").
+5. Since the batch script doesn't write its output into the filesystem, running it from the command prompt is recommended.
+
+
