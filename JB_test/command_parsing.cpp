@@ -490,7 +490,7 @@ static void parse_command_arguments(custom_istr_stream& ss)
 
 				calculate
 
-					parser_state = 1;
+					parser_state = 2;
 				continue;
 
 
