@@ -30,7 +30,7 @@ JB_test.exe "%json_file%" "v"
 
 echo[
 echo[
-echo Calling command #$%%\*" // must escape '*' since solution supports arithmetic ops
+echo Calling command #$%%\*"
 JB_test.exe "%json_file%" "#$%%\*\""
 
 echo[
@@ -62,6 +62,16 @@ JB_test.exe "%json_file%" "min(#$%%\*\"[3],-20000\.23242)"
 
 echo[
 echo[
+echo Calling command g[5/2]
+JB_test.exe "%json_file%" "g[5/2]"
+
+echo[
+echo[
+echo Calling command min(d[0]*d[1]+d[2], d[2]+ d[0]*2 )+ sum(d)*size(v.c)
+JB_test.exe "%json_file%" "min(d[0]*d[1]+d[2], d[2]+ d[0]*2 )+ sum(d)*size(v.c)"
+
+echo[
+echo[
 echo Calling command size(v)
 JB_test.exe "%json_file%" "size(v)"
 
@@ -89,16 +99,6 @@ echo[
 echo[
 echo Calling command sum(23 + 5/5,100)
 JB_test.exe "%json_file%" "sum(23 + 5/5,100)"
-
-echo[
-echo[
-echo Calling command sum(23 + 5/5,100/(100/(5*5)))
-JB_test.exe "%json_file%" "sum(23 + 5/5,100/(100/(5*5)))"
-
-echo[
-echo[
-echo Calling command g[5/2]
-JB_test.exe "%json_file%" "g[5/2]"
 
 echo[
 echo[
@@ -162,16 +162,6 @@ JB_test.exe "%json_file%" "size(c,g)"
 
 echo[
 echo[
-echo Calling command min(d[0]*d[1]+d[2], d[2] - a+ d[0]*2 )
-JB_test.exe "%json_file%" "min(d[0]*d[1]+d[2], d[2] - a+ d[0]*2 )"
-
-echo[
-echo[
-echo Calling command min(d[0]*d[1]+d[2], a + a +d[2] - a+ d[0]*2 )
-JB_test.exe "%json_file%" "min(d[0]*d[1]+d[2], a + a +d[2] - a+ d[0]*2 )"
-
-echo[
-echo[
 echo Calling command 1/0
 JB_test.exe "%json_file%" "1/0"
 
@@ -179,7 +169,6 @@ echo[
 echo[
 echo Calling command sum(g)
 JB_test.exe "%json_file%" "sum(g)"
-
 
 echo[
 echo[

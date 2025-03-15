@@ -2,12 +2,11 @@
 #include <vector>
 #include <fstream>
 #include "custom_input_stream.h"
+#include "command_processor.h"
 
 
 
 Node * json_parser(custom_is& file_input);
-void execute_command(const char* command);
-Node* root_node;
 int main(int argc,  char const * argv[])
 {
 	if (argc != 3)
@@ -21,9 +20,9 @@ int main(int argc,  char const * argv[])
 		cout << "JSON file could not be opened.";
 		exit(9);
 	}
-	root_node = json_parser(file_input);
+	Node *root_node = json_parser(file_input);
 	
 
-	//cout << *root_node<<'\n';
-	execute_command(argv[2]);
+	Node * temp  = command_processor(root_node, argv[2]).execute_command();
+	cout<< *temp;
 }

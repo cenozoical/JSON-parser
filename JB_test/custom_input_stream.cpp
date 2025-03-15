@@ -1,7 +1,15 @@
 #include "custom_input_stream.h"
 
+custom_is::custom_is(const char* s) :fstream(s)
+{
+	column_index = 1;
+	prev_column_index = 1;
+	row_index = 1;
+	last_operation_is_peek = false;
+}
 int custom_is::get()
 {
+	last_operation_is_peek = false;
 	int c = this->istream::get();
 	if (c == '\n')
 	{
@@ -13,19 +21,38 @@ int custom_is::get()
 	else column_index++;
 	return c;
 }
-int custom_is::column_index = 1;
-int custom_is::prev_column_index = 1;
-int custom_is::row_index = 1;
-bool custom_is::erroneous_peek = false;
-void custom_is::adjust_indexes()
+int custom_is::peek()
 {
-	if (!erroneous_peek)
-	{
-		if (column_index == 1)
-		{
-			row_index--;
-			column_index = prev_column_index;
-		}
-		else column_index--;
-	}
+	last_operation_is_peek = true;
+	return this->istream::peek();
+	
 }
+
+int custom_is::get_column_index()
+{
+	if (last_operation_is_peek) return column_index;
+	else if (column_index == 1) return prev_column_index;
+	else return column_index - 1;
+}
+int custom_is::get_row_index()
+{
+	if (last_operation_is_peek) return row_index;
+	else if (column_index == 1) return row_index - 1;
+	else return row_index;
+}
+void custom_is::subtract_column_index(int subtrahend)
+{
+	column_index -= subtrahend;
+}
+//void custom_is::adjust_indexes()
+//{
+//	if (!erroneous_peek)
+//	{
+//		if (column_index == 1)
+//		{
+//			row_index--;
+//			column_index = prev_column_index;
+//		}
+//		else column_index--;
+//	}
+//}

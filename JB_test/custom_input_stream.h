@@ -2,19 +2,27 @@
 #define CUSTOM_IS_H
 #include <fstream>
 using namespace std;
+/*
+* This class is used for reading characters from JSON file.
+* It builds upon fstream class by providing additional information about the current position in JSON file,
+* which is used for precise error reporting.
+*/
 class custom_is : public fstream
 {
-	 static int prev_column_index;
-public:
-	static int column_index;
-	static int row_index;
-	static bool erroneous_peek;//used for the purposes of showing the right erroneous JSON indexes
-	int get();
-static	void adjust_indexes();
-	custom_is(const char* s) :fstream(s)
-	{
+	  int prev_column_index;
+	  int column_index;
+	  int row_index;
 
-	}
+	  bool last_operation_is_peek;
+public:
+	void subtract_column_index(int subtrahend);
+	int get_column_index();
+	int get_row_index();
+	int peek();
+
+	int get();
+	
+	custom_is(const char* s);
 	
 
 

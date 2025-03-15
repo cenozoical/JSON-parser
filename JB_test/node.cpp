@@ -1,6 +1,6 @@
 #include "node.h"
 #include <cctype>
-
+#include "exception_classes.h"
 
 Node::Node() :name(nullptr), str_value(nullptr), sibling(nullptr), children(nullptr)
 {
@@ -84,7 +84,7 @@ void Node::add_child(Node* node)
 custom_is& operator >> (custom_is &is , Node& node)
 {
 	char c = is.peek();
-	if (c == '"')
+	if (c == '"') 
 	{
 		node.str_value = new string();
 		is.get();
@@ -138,8 +138,8 @@ custom_is& operator >> (custom_is &is , Node& node)
 		catch (out_of_range& e)
 		{
 			
-			custom_is::column_index -= str_float->length();
-			custom_is::erroneous_peek = true;//avoiding additional index decrement
+			is.subtract_column_index(str_float->length());
+			is.peek();//prevents column index decrementation when printing errors
 			throw out_of_range(e);
 		}
 		
@@ -188,7 +188,7 @@ custom_is& operator >> (custom_is &is , Node& node)
 	}
 	else
 	{
-		custom_is::erroneous_peek = true;
+		is.peek();//prevents column index decrementation when printing errors
 		throw bad_format("String value must be enclosed inside double quotation marks.");
 	}
 

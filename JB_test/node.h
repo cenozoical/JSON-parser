@@ -4,6 +4,12 @@
 #include <iostream>
 #include "custom_input_stream.h"
 using namespace std;
+/*
+Each node represents an element of the JSON file. It can be either a JSON file itself, JSON field or an array element.
+In case, node is of type JSON or array, class fields "children" are used for representing its elements - essentially 
+a linked list is used, where "children" is a pointer to the head of the list, while "sibling" can be used to 
+traverse the list.
+*/
 enum node_type
 {
 	JSON,
@@ -16,7 +22,10 @@ enum node_type
 class Node
 {
 private:
-
+	/*name is a JSON field name in case the node represents a JSON field
+	str_value represents a string value in case node is of STRING type
+	for example in file {"a":"abc"}, "a" is the field name, while "abc" is a string value
+	*/
 	string *name, *str_value;
 	node_type type;
 	float number_value;
@@ -54,44 +63,7 @@ public :
 };
 
 custom_is& operator >> (custom_is&, Node&);
-class bad_format :public exception
-{
-public:
-	
-	bad_format(const char* s) : exception(s)
-	{
 
-	}
-};
-class escaped_char :public exception
-{
-	char c;
-public:
-	escaped_char(char c) 
-	{
-		this->c = c;
-	}
-	char get_escaped_character()
-	{
-		return c;
-	}
-};
-class unreachable_logic :public exception
-{
-public :
-	unreachable_logic() : exception("This part of program shouldn't be executing.")
-	{
-
-	}
-};
-class control_character :public exception
-{
-
-};
-class redundant_check_succeeded :public exception
-{
-
-};
 
 #endif // !Node
 

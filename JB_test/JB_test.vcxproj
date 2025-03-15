@@ -127,15 +127,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="command_processor.h" />
+    <ClInclude Include="command_parsing_enumerations.h" />
     <ClInclude Include="custom_input_stream.h" />
     <ClInclude Include="custom_input_string_stream.h" />
+    <ClInclude Include="exception_classes.h" />
     <ClInclude Include="node.h" />
-    <ClInclude Include="repetetive_code.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="command_parsing.cpp" />
+    <ClCompile Include="command_processor.cpp" />
     <ClCompile Include="custom_input_stream.cpp" />
     <ClCompile Include="custom_input_string_stream.cpp" />
+    <ClCompile Include="exception_classes.cpp" />
     <ClCompile Include="json_parser.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="node.cpp" />
