@@ -1,10 +1,20 @@
+This is the repository for the JSON parser project.
+
+The goal of the project is to develop a program which executes the given command (second argument) on a given JSON file.
+
+Example: 
+file : {"a":123, "b":[{"c":456},223]}, command: a+b[0].c + b[2]
+
+Currently, the project only supports read-only type of operations.
+
 This project was made using Visual Studio Code 2022 on the Windows 10 operating system.
 
-Instructions for building and running the application.
+Instructions for building and testing the application.
 1. Open "Command Prompt" application
 2. Change the current directory to that of the extracted archive.
 3. Run 'msbuild' command (Windows 10 PATH variable with the value of 'MsBuild.exe' parent directory needs to be configured).
 4. On my own computer, step number 3 creates the directory "x64/Debug" where the resulting executable is located. For testing purposes I have written a batch script "cmd_script.bat" that runs the resulting executable file with various parameters. In order for it to work, the value of the "progam_file_directory" variable (inside cmd_script.bat file) has to be set to the relative path of the directory where the executable file is located (as stated, in my case it was: "x64/Debug").
 5. Since the batch script doesn't write its output onto the filesystem, I recommend running it from the "Command Prompt" application (as opposed to just clicking it).
+
 
 
